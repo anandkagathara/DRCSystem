@@ -1,15 +1,15 @@
 const Joi = require("joi");
 
-const registerCompanyValidator = (companyData) => {
+const registerUserValidator = (userData) => {
   const schema = Joi.object({
     name: Joi.string().required(),
-    address: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
-    phone: Joi.number().required(),
+    mobile_number: Joi.number().required(),
+    isAdmin : Joi.boolean().optional()
   });
 
-  const { error } = schema.validate(companyData);
+  const { error } = schema.validate(userData);
   if (error) {
     const errorMessage = error.details[0].message;
     const statusCode = 400; // Bad Request
@@ -17,24 +17,22 @@ const registerCompanyValidator = (companyData) => {
   }
 };
 
-const loginCompanyValidator = (companyData) => {
+const loginuserValidator = (userData) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
   });
 
-  const { error } = schema.validate(companyData);
+  const { error } = schema.validate(userData);
   if (error) {
     const errorMessage = error.details[0].message;
     const statusCode = 400; // Bad Request
     throw { statusCode, message: errorMessage };
   }
 };
-
-
 
 
 module.exports = {
-  registerCompanyValidator,
-  loginCompanyValidator,
+  registerUserValidator,
+  loginuserValidator,
 };

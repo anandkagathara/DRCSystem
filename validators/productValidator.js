@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const Employee = require("../models/Employee");
+const Employee = require("../models/product");
 
 const createEmployeeValidator = (employeeData) => {
   const schema = Joi.object({

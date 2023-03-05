@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const companyRoutes = require('./routes/companyRoute');
-const employeeRoutes = require('./routes/employeeRoute');
+const userRoutes = require('./routes/userRoutes.js');
+const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes')
 
 const app = express();
 
@@ -11,11 +12,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dynamic-dreamz', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/DRCSystem', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Use routes
-app.use('/company', companyRoutes);
-app.use('/employee', employeeRoutes);
+app.use('/user', userRoutes);
+app.use('/product', productRoutes);
+app.use('/order',orderRoutes)
+
 
 // Start the server
 app.listen(process.env.PORT || 3000, () => {
