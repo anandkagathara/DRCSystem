@@ -1,11 +1,12 @@
-const Order = require('../models/Order');
+const Order = require("../models/Order");
+const { ObjectId } = require("mongodb");
 
 // Create a new order
 async function createOrder(orderData) {
   const newOrder = new Order(orderData);
 
   const order_code = newOrder.order_code;
-  const orderCheck = await Order.find({ order_code });
+  const orderCheck = await Order.find({ order_code: order_code });
 
   if (orderCheck.length > 0) {
     throw new Error("orderCode already exists");
@@ -15,19 +16,21 @@ async function createOrder(orderData) {
   return order;
 }
 
-
-// Get all orders with pagination and sorting
-async function getAllOrders(page, limit, sortBy, search) {
-  const skip = (page - 1) * limit;
+async function getAllOrders(sortBy, search, user) {
+  const id = user._id.toString();
   const sort = sortBy ? { [sortBy]: 1 } : {};
-  const searchFilter = search ? { name: { $regex: search, $options: "i" } } : {};
-  const orders = await Order.find(searchFilter)
-    .sort(sort)
-    .skip(skip)
-    .limit(limit);
-  const count = await Order.countDocuments(searchFilter);
-  const totalPages = Math.ceil(count / limit);
-  return { orders, totalPages };
+  const uId = new ObjectId(id);
+  const searchFilter = search
+    ? {
+        $and: [{ user_id: uId }, { name: { $regex: search, $options: "i" } }],
+      }
+    : { user_id: uId };
+
+  const orders = await Order.find(searchFilter).sort(sort);
+
+  console.log(orders);
+
+  return orders;
 }
 
 // Get an order by id
@@ -45,7 +48,6 @@ async function updateOrder(orderId, orderData) {
   );
   return order;
 }
-
 
 // Delete an order by id
 async function deleteOrder(orderId) {

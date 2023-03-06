@@ -1,13 +1,13 @@
-
-
 const userService = require("../services/userService");
 const UserValidator = require("../validators/userValidator");
+
 
 exports.register = async (req, res) => {
   try {
     await UserValidator.registerUserValidator(req.body);
+
     const data = await userService.registerUser(req.body);
-    res.json({ data, message: "Company registered successfully" });
+    res.json({ data, message: "User registered successfully" });
   } catch (error) {
     const statusCode = error.statusCode || 500; // Internal Server Error
     const message = error.message || "Internal Server Error";
@@ -33,5 +33,3 @@ exports.login = async (req, res) => {
     return res.status(statusCode).json({ message });
   }
 };
-
-

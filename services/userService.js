@@ -10,24 +10,22 @@ const registerUser = async (userData) => {
 
   const mobileNumber = userData.mobile_number;
   const userEmail = userData.email;
-  const mobileCheck = await User.find({ mobileNumber });
+  const mobileCheck = await User.find({ mobile_number: mobileNumber });
 
-  if (mobileCheck.length>0) {
+  if (mobileCheck.length > 0) {
     throw new Error("Mobile number already exists");
   }
+  const emailCheck = await User.find({ email: userEmail });
 
-  const emailCheck = await User.find({ userEmail });
-
-
-  if (emailCheck.length>0) {
-    throw new Error("Email already exists");
+  if (emailCheck.length > 0) {
+    throw new Error("Email already registered");
   }
 
   const newuser = new User({
     name: userData.name,
     isAdmin: userData.isAdmin,
-    email: userData.email,
-    mobile_number: userData.mobile_number,
+    email: userEmail,
+    mobile_number: mobileNumber,
     password: hashedPassword,
   });
 
